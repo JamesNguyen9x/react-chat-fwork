@@ -259,7 +259,7 @@ class Chat extends Component {
 
   getMemberList = async (roomId) => {
     const baseURL = `${process.env.CHAT_BACKEND_URL}/api/v1/chat`;
-    const url = `${process.env.CHAT_BACKEND_URL}/api/v1/groups/${roomId}`;
+    const url = `/groups/${roomId}`;
     let response = await fetchAPI(baseURL, url, 'GET');
     return response.data;
   };
@@ -405,7 +405,7 @@ class Chat extends Component {
   _createGroup = (data) => {
     data = {...data, userId: this.props.users.currentUser._id};
     const baseURL = `${process.env.CHAT_BACKEND_URL}/api/v1/chat`;
-    const url = `${process.env.CHAT_BACKEND_URL}/api/v1/groups`;
+    const url = `/groups`;
 
     return fetchAPI(baseURL, url, 'POST', null, data);
   };
@@ -413,7 +413,7 @@ class Chat extends Component {
   _editGroup = (data) => {
 
     const baseURL = `${process.env.CHAT_BACKEND_URL}/api/v1/chat`;
-    const url = `${process.env.CHAT_BACKEND_URL}/api/v1/groups/${data.roomId}/edit`;
+    const url = `/groups/${data.roomId}/edit`;
 
     return fetchAPI(baseURL, url, 'PUT', null, data).then((res) => {
       if (res.status === 200) {

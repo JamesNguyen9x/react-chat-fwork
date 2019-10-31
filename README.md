@@ -3,7 +3,7 @@
 ## Installation
 
 ```
-$ npm install chat-fwork
+$ npm install react-chat-fwork
 ```
 
 ## Example
