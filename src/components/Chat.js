@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import RoomList from './RoomList';
 import socketIOClient from 'socket.io-client';
 import uuid from 'uuid';
 import ChatWindow from './ChatWindow';
 import update from 'react-addons-update';
-import {connect} from 'react-redux';
 import fetchAPI from '../fetchAPI';
 import {getToken} from '../fetchAPI/cookie';
 
