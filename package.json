@@ -18,6 +18,7 @@
   "dependencies": {
     "emoji-js": "3.2.2",
     "gh-pages": "^1.2.0",
+    "js-cookie": "^2.2.1",
     "moment": "^2.24.0",
     "prop-types": "15.5.10",
     "react-addons-update": "^15.6.2",
@@ -25,7 +26,10 @@
     "react-highlight.js": "1.0.5",
     "react-linkify": "^0.2.1",
     "react-moment": "^0.9.6",
+    "react-redux": "^7.1.1",
     "react-svg": "^10.0.23",
+    "react-timeago": "^4.4.0",
+    "redux": "^4.0.4",
     "socket.io-client": "2.0.3"
   },
   "peerDependencies": {
@@ -40,11 +44,11 @@
     "react-dom": "15.6.1"
   },
   "author": "damnn",
-  "homepage": "https://kingofthestack.github.io/react-chat-window/",
+  "homepage": "https://github.com/JamesNguyen9x/react-chat-fwork",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/kingofthestack/react-chat-window.git"
+    "url": "https://github.com/JamesNguyen9x/react-chat-fwork"
   },
   "keywords": [
     "react-component"
