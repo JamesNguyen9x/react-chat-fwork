@@ -105,7 +105,7 @@ class RoomList extends Component {
   };
 
   getRooms = async () => {
-    const baseURL = `${process.env.API_SERVER_SOCKET}/api/v1`;
+    const baseURL = `${process.env.CHAT_BACKEND_URL}/api/v1/chat`;
     const url = `/rooms`;
     let response = await fetchAPI(baseURL, url, 'GET');
     this.setState({
@@ -169,7 +169,7 @@ class RoomList extends Component {
       });
       return;
     }
-    const baseURL = `${process.env.API_SERVER_SOCKET}/api/v1`;
+    const baseURL = `${process.env.CHAT_BACKEND_URL}/api/v1`;
     const url = `/rooms/search`;
     const params = {
       key

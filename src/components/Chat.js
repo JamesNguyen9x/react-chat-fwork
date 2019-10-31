@@ -4,9 +4,9 @@ import socketIOClient from 'socket.io-client';
 import uuid from 'uuid';
 import ChatWindow from './ChatWindow';
 import update from 'react-addons-update';
+import {connect} from 'react-redux';
 import fetchAPI from '../fetchAPI';
 import {getToken} from '../fetchAPI/cookie';
-import PropTypes from "prop-types";
 
 class Chat extends Component {
   typing = false;
@@ -36,7 +36,7 @@ class Chat extends Component {
   }
 
   connectSocket = async () => {
-    const endpoint = process.env.API_SERVER_SOCKET;
+    const endpoint = process.env.SERVER_SOCKET;
     window.socket = socketIOClient(endpoint);
     let tokenJWT = getToken();
     window.socket.on('connect', () => {
@@ -68,7 +68,7 @@ class Chat extends Component {
 
     window.socket.on('typing_message', data => {
       clearTimeout(this.timeoutStopTyping);
-      if (data.roomId !== this.state.roomIdActive || data.userId === this.props.user._id) {
+      if (data.roomId !== this.state.roomIdActive || data.userId === this.props.users.currentUser._id) {
         return;
       }
       const message = this.state.userActive.username + data.message;
@@ -164,7 +164,7 @@ class Chat extends Component {
       if (!roomIds.length) {
         return;
       }
-      const baseURL = `${process.env.API_SERVER_SOCKET}/api/v1`;
+      const baseURL = `${process.env.CHAT_BACKEND_URL}/api/v1/chat`;
       const url = `/rooms/info`;
       const params = {
         roomIds
@@ -219,7 +219,7 @@ class Chat extends Component {
       parentMessage: message.parentMessage ? message.parentMessage._id : ''
     };
     message.status = 0;
-    message.senderId = this.props.user._id;
+    message.senderId = this.props.users.currentUser._id;
     message.createdDate = new Date();
     message.clientId = uuid();
     const newMessageList = [...this.state.rooms[index].messageList, message];
@@ -258,14 +258,14 @@ class Chat extends Component {
   };
 
   getMemberList = async (roomId) => {
-    const baseURL = `${process.env.API_SERVER_SOCKET}/api/v1`;
-    const url = `${process.env.API_SERVER_SOCKET}/api/v1/groups/${roomId}`;
+    const baseURL = `${process.env.CHAT_BACKEND_URL}/api/v1/chat`;
+    const url = `${process.env.CHAT_BACKEND_URL}/api/v1/groups/${roomId}`;
     let response = await fetchAPI(baseURL, url, 'GET');
     return response.data;
   };
 
   _getRoomForUser = (user) => {
-    const baseURL = `${process.env.API_SERVER_SOCKET}/api/v1`;
+    const baseURL = `${process.env.CHAT_BACKEND_URL}/api/v1/chat`;
     const url = `/rooms/for-user`;
     const params = {
       userId: user._id
@@ -339,10 +339,10 @@ class Chat extends Component {
       if (index < 0) {
         return;
       }
-      if (message.liked.includes(this.props.user._id)) {
-        message.liked = message.liked.filter(mess => mess !== this.props.user._id);
+      if (message.liked.includes(this.props.users.currentUser._id)) {
+        message.liked = message.liked.filter(mess => mess !== this.props.users.currentUser._id);
       } else {
-        message.liked.push(this.props.user._id);
+        message.liked.push(this.props.users.currentUser._id);
       }
       const indexMessage = this.state.rooms[index].messageList.findIndex(mess => mess._id === message._id);
       let newListMessage = this.state.rooms[index].messageList;
@@ -373,8 +373,8 @@ class Chat extends Component {
       roomId: roomId,
       firstMessageAt: room.firstMessageAt
     };
-    const baseURL = `${process.env.API_SERVER_SOCKET}/api/v1`;
-    const url = `${process.env.API_SERVER_SOCKET}/api/v1/messages`;
+    const baseURL = `${process.env.CHAT_BACKEND_URL}/api/v1/chat`;
+    const url = `${process.env.CHAT_BACKEND_URL}/api/v1/messages`;
     fetchAPI(baseURL, url, 'GET', params).then(response => {
       this.isLoadingMessage = false;
       let messages = response.data.messages;
@@ -403,17 +403,17 @@ class Chat extends Component {
   };
 
   _createGroup = (data) => {
-    data = {...data, userId: this.props.user._id};
-    const baseURL = `${process.env.API_SERVER_SOCKET}/api/v1`;
-    const url = `${process.env.API_SERVER_SOCKET}/api/v1/groups`;
+    data = {...data, userId: this.props.users.currentUser._id};
+    const baseURL = `${process.env.CHAT_BACKEND_URL}/api/v1/chat`;
+    const url = `${process.env.CHAT_BACKEND_URL}/api/v1/groups`;
 
     return fetchAPI(baseURL, url, 'POST', null, data);
   };
 
   _editGroup = (data) => {
 
-    const baseURL = `${process.env.API_SERVER_SOCKET}/api/v1`;
-    const url = `${process.env.API_SERVER_SOCKET}/api/v1/groups/${data.roomId}/edit`;
+    const baseURL = `${process.env.CHAT_BACKEND_URL}/api/v1/chat`;
+    const url = `${process.env.CHAT_BACKEND_URL}/api/v1/groups/${data.roomId}/edit`;
 
     return fetchAPI(baseURL, url, 'PUT', null, data).then((res) => {
       if (res.status === 200) {
@@ -449,8 +449,8 @@ class Chat extends Component {
       data.append(`file${i}`, file);
     }
 
-    const baseURL = `${process.env.API_SERVER_SOCKET}/api/v1`;
-    const url = `${process.env.API_SERVER_SOCKET}/api/v1/upload-file`;
+    const baseURL = `${process.env.CHAT_BACKEND_URL}/api/v1/chat`;
+    const url = `${process.env.CHAT_BACKEND_URL}/api/v1/upload-file`;
 
     return fetchAPI(baseURL, url, 'POST', null, data);
 
@@ -574,10 +574,10 @@ class Chat extends Component {
                 onUserTyping={this._onUserTyping}
                 onScroll={this._onScroll}
                 room={room}
-                currentUserId={this.props.user._id}
+                currentUserId={this.props.users.currentUser._id}
                 onReplyMessage={this._onReplyMessage}
                 onCloseReplyMessage={this._onCloseReplyMessage}
-                currentUser={this.props.user}
+                currentUser={this.props.users.currentUser}
               />
             </div>;
           })}

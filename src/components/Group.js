@@ -44,7 +44,7 @@ export default class Group extends Component {
 
       if ( !name || !members || !companyId ) return;
 
-      const baseURL = `${process.env.API_SERVER_SOCKET}/api/v1`;
+      const baseURL = `${process.env.CHAT_BACKEND_URL}/api/v1/chat`;
       const url = `/groups/company/${companyId}`;
       const usersChecked = members.map(member => member.userInfo).filter(member => member._id !== this.props.currentUserId);
 
@@ -64,14 +64,14 @@ export default class Group extends Component {
   }
 
   fetchCompanies = () => {
-    const baseURL = `${process.env.API_SERVER_SOCKET}/api/v1`;
+    const baseURL = `${process.env.CHAT_BACKEND_URL}/api/v1/chat`;
     const url = `/users/companies`;
     return fetchAPI(baseURL, url, 'GET');
   }
 
   fetchUser = ( page = 1) => {
 
-    const baseURL = `${process.env.API_SERVER_SOCKET}/api/v1`;
+    const baseURL = `${process.env.CHAT_BACKEND_URL}/api/v1/chat`;
     const url = `/users/by-company`;
 
     let params = {

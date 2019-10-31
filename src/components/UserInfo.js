@@ -8,7 +8,7 @@ class UserInfo extends Component {
   };
 
   createRoom = async () => {
-    const baseURL = `${process.env.API_SERVER_SOCKET}/api/v1`;
+    const baseURL = `${process.env.CHAT_BACKEND_URL}/api/v1/chat`;
     const url = `/rooms/for-user`;
     const params = {
       userId: this.props.user._id
