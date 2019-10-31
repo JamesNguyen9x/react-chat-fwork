@@ -25,7 +25,7 @@ class UserInput extends Component {
     if (event.keyCode === 13 && !event.shiftKey) {
       return this._submitText(event);
     } else {
-      this.props.onTyping()
+      this.props.onTyping();
     }
   }
 
@@ -62,7 +62,7 @@ class UserInput extends Component {
       let data = {
         type: 1,
         content: text
-      }
+      };
       if (messageReply && messageReply._id) {
         data.parentMessage = messageReply;
       }

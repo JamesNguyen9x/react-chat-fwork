@@ -25,16 +25,8 @@ export default function (baseURL, url, method = 'POST', params = {}, data = null
         resolve(response);
       })
       .catch(function (error) {
-        // if (didTimeOut) return;
         if (error.response) {
-          const err = error.response;
-          console.log('err', err)
-          if (err.status === 401) {
-          } else {
-            reject(error.response);
-            // return errors
-            reject(err.data.errors);
-          }
+          reject(error.response);
         }
       });
   });

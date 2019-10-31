@@ -32,7 +32,7 @@
   overflow-y: auto;
   background-color: white;
   background-size: 100%;
-   padding: 20px 0;
+  /* padding: 40px 0; */
 }
 
 .sc-message--me {

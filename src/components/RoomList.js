@@ -1,12 +1,12 @@
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
-import RoomInfo from "./RoomInfo";
-import fetchAPI from '../fetchAPI'
-import update from "react-addons-update";
+import RoomInfo from './RoomInfo';
+import fetchAPI from '../fetchAPI';
+import update from 'react-addons-update';
 import Group from './Group';
 import iconCreateGroup from '../assets/create-group-icon.png';
-import {DebounceInput} from "react-debounce-input";
-import UserInfo from "./UserInfo";
+import {DebounceInput} from 'react-debounce-input';
+import UserInfo from './UserInfo';
 
 class RoomList extends Component {
   constructor() {
@@ -15,7 +15,7 @@ class RoomList extends Component {
       openCreateGroupWindow: false,
       groupEdit: null,
       rooms: [],
-      key: "",
+      key: '',
       searchResult: {
         groups: [],
         users: []
@@ -36,23 +36,23 @@ class RoomList extends Component {
             data.room,
             ...this.state.rooms
           ]
-        })
+        });
       }
       return;
     }
-    this.state.rooms[index].lastMessage = data.content;
-    this.state.rooms[index].lastTimeSendMessage = data.createdDate;
-    if (isUpdateUnread) {
-      this.state.rooms[index].unreadMessage = this.state.rooms[index].unreadMessage ? this.state.rooms[index].unreadMessage + 1 : 1;
-    }
     let rooms = this.state.rooms;
+    rooms[index].lastMessage = data.content;
+    rooms[index].lastTimeSendMessage = data.createdDate;
+    if (isUpdateUnread) {
+      rooms[index].unreadMessage = rooms[index].unreadMessage ? rooms[index].unreadMessage + 1 : 1;
+    }
     rooms = rooms.sort(this.compareRoom);
     this.setState({
       rooms: rooms
-    })
+    });
   };
 
-  compareRoom(a, b){
+  compareRoom = (a, b) =>{
     if (a.lastTimeSendMessage < b.lastTimeSendMessage){
       return 1;
     }
@@ -71,10 +71,19 @@ class RoomList extends Component {
     });
   };
 
+  updateRoom = (newRoom) => {
+    let index = this.state.rooms.findIndex(room => room._id === newRoom._id);
+    this.setState({
+      rooms: update(this.state.rooms, {
+        [index]: {$set: newRoom}
+      }),
+    });
+  };
+
   listenUserChangeStatus = () => {
     if (!window.socket) {
       setTimeout(() => {
-        this.listenUserChangeStatus()
+        this.listenUserChangeStatus();
       }, 3000);
       return;
     }
@@ -92,7 +101,7 @@ class RoomList extends Component {
           otherUsers: update(this.state.otherUsers, {[index]: {status: {$set: data.status}}}),
         });
       }
-    })
+    });
   };
 
   getRooms = async () => {
@@ -109,7 +118,7 @@ class RoomList extends Component {
     if (index < 0) {
       this.props._openChatWindow(room);
       this.setState({
-        key: "",
+        key: '',
         searchResult: {
           groups: [],
           users: []
@@ -117,9 +126,8 @@ class RoomList extends Component {
       });
       return;
     }
-    console.log('dkm');
     this.setState({
-      key: "",
+      key: '',
       searchResult: {
         groups: [],
         users: []
@@ -130,30 +138,30 @@ class RoomList extends Component {
         }
       }),
     });
-    this.props._openChatWindow(room)
+    this.props._openChatWindow(room);
   };
 
   getRoomForUser = (user) => {
-    this.props.getRoomForUser(user)
+    this.props.getRoomForUser(user);
   };
 
   _openCreateGroupWindow = () => {
     this.setState({
       openCreateGroupWindow: true,
-    })
+    });
   };
 
   handelCancerCreateGroup = () => {
     this.setState({
       openCreateGroupWindow: false,
-    })
+    });
   };
 
   handleSearch = async (e) => {
     let key = e.target.value;
     if (!key.length) {
       this.setState({
-        key: "",
+        key: '',
         searchResult: {
           groups: [],
           users: []
@@ -222,7 +230,7 @@ class RoomList extends Component {
               groupInfo={this.state.groupEdit}
               _editGroup={this.props._editGroup}
               _createGroup={this.props._createGroup}
-              handleCancer={this.handelCancerCreateGroup}
+              handleCancel={this.handelCancerCreateGroup}
               handleUpdateRoom={this.addRoom}
             />
           }

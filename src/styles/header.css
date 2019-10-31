@@ -68,6 +68,10 @@
   top: 12px;
 }
 
+.icon-edit-gr {
+  margin-right: 10px;
+}
+
 @media (max-width: 450px) {
   .sc-header {
     border-radius: 0px;

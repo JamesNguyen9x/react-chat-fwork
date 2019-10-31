@@ -15,11 +15,7 @@ class ChatWindow extends Component {
     this.state = {
       openEditGroup: false,
       groupInfo: null
-    }
-  }
-
-  componentDidMount() {
-    console.log('this,props.room', this.props.room)
+    };
   }
 
   onUserInputSubmit(message) {
@@ -39,7 +35,7 @@ class ChatWindow extends Component {
   }
 
   onClose() {
-    this.props.onClose(this.props.room._id)
+    this.props.onClose(this.props.room._id);
   }
 
   onHideWindow() {
@@ -64,14 +60,14 @@ class ChatWindow extends Component {
   handleOpenEditGroup = () => {
     this.setState({
       openEditGroup: true
-    })
-  }
+    });
+  };
 
-  handleCancerEditGroup = () => {
+  handleCancelEditGroup = () => {
     this.setState({
       openEditGroup: false
-    })
-  }
+    });
+  };
 
   render() {
     let classList = [
@@ -81,12 +77,12 @@ class ChatWindow extends Component {
     return (
       <div style={ this.props.isHideWindow ? {height: '80px'} : {} } className={classList.join(' ')}>
         {(this.props.room.type === 2 && this.state.openEditGroup) && <Group
-              groupInfo={this.props.room}
-              _editGroup={this.props._editGroup}
-              _createGroup={this.props._createGroup}
-              handleCancer={this.handleCancerEditGroup}
-              handleUpdateRoom={this._handleUpdateRoom}
-            />}
+          groupInfo={this.props.room}
+          _editGroup={this.props._editGroup}
+          currentUserId={this.props.currentUserId}
+          handleCancel={this.handleCancelEditGroup}
+          handleUpdateRoom={this._handleUpdateRoom}
+        />}
 
         <Header
           openEditGroup={this.handleOpenEditGroup}
@@ -110,22 +106,22 @@ class ChatWindow extends Component {
         />
         <div className="message-suggest"><i>{this.props.room.messageSuggest}</i></div>
         {this.props.room.messageReply ?
-        <div>
-          <img src={replyIcon} className="icon-blue-reply"/>
-          <div>{this.props.room.messageReply.content ?
-            <div className="message-reply-content">
-              <div className="sc-message--avatar avatar-reply" style={{
-                backgroundImage: `url(${this.getAvatarMember()})`
-              }}></div>
-              <div className="text-message-parent">
-                {this.props.room.messageReply.content}
-                <TimeAgo className="reply-message-time-send" date={this.props.room.messageReply.createdDate} />
-              </div>
-            </div> : ''}
+          <div>
+            <img src={replyIcon} className="icon-blue-reply"/>
+            <div>{this.props.room.messageReply.content ?
+              <div className="message-reply-content">
+                <div className="sc-message--avatar avatar-reply" style={{
+                  backgroundImage: `url(${this.getAvatarMember()})`
+                }}></div>
+                <div className="text-message-parent">
+                  {this.props.room.messageReply.content}
+                  <TimeAgo className="reply-message-time-send" date={this.props.room.messageReply.createdDate} />
+                </div>
+              </div> : ''}
             <div className="message-reply-close-icon" onClick={this.onCloseReplyMessage}>
               <img src={closeIconBlack} alt="" />
             </div>
-          </div></div> : ''}
+            </div></div> : ''}
         <div className="message-suggest"><i>{this.props.room.messageSuggest}</i></div>
         <UserInput
           isHideWindow={this.props.room.isHideWindow}
@@ -152,4 +148,4 @@ ChatWindow.propTypes = {
   currentUserId: PropTypes.string,
 };
 
-export default ChatWindow
+export default ChatWindow;

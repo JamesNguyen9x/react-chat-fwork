@@ -6,6 +6,7 @@
 }
 
 .sc-message--content {
+  position: relative;
   width: 100%;
   display: flex;
 }
@@ -42,6 +43,10 @@
   -webkit-font-smoothing: subpixel-antialiased;
   word-wrap: break-word;
   text-align: left;
+}
+
+.content-message-background-left {
+  background: #ccc !important;
 }
 
 .sc-message--time {
@@ -93,19 +98,20 @@
   color: rgba(86, 88, 103, 0.6);
 }
 
-.sc-message--text .reply-icon {
+
+.message-icon-event {
   position: absolute;
-  cursor: pointer;
-  top: 13%;
-  right: -10px;
-  width: 21px;
+  top: 5px;
+  right: -6px;
 }
 
-.sc-message--text .like-icon {
-  right: 15px;
-  bottom: 17px;
-  position: absolute;
+.message-icon-event .like-icon {
   cursor: pointer;
+}
+
+.message-icon-event .reply-icon {
+  cursor: pointer;
+  margin-left: 5px;
 }
 
 .sc-message--file .sc-user-input--file-icon:hover path {
@@ -121,12 +127,21 @@
 
 .container-count-like {
   position: absolute;
-  bottom: 0px;
+  bottom: -5px;
   left: 0px;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  background: orange;
 }
 
-.count-like-img {
-  position: absolute;
+.container-count-like .count-like-img {
+  width: 12px;
+  height: 12px;
+}
+
+.container-count-like .count-like-number {
+  font-size: 11px;
+  margin-right: 2px;
 }
 
 .content-parent-message {

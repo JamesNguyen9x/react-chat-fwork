@@ -16,7 +16,7 @@ class MessageList extends Component {
       this.scrollList.scrollTop = this.scrollList.scrollHeight - this.prevScrollHeight;
     }
     this.prevScrollHeight = this.scrollList.scrollHeight;
-  };
+  }
 
   handleScroll = () => {
     this.props.onScroll(this.scrollList.scrollTop);
@@ -44,8 +44,8 @@ class MessageList extends Component {
     return (
       <div style={ this.props.isHideWindow ? {display: 'none'} : {} } className="sc-message-list" ref={el => this.scrollList = el} onScroll={this.handleScroll}>
         {this.props.messages.map((message, i) => {
-          return <Message onLikeMessage={this.props.onLikeMessage} message={message} avatarUserParentMessage={message.parentMessage ? this.getAvatarMember(message.parentMessage) : ''} onReplyMessage={this.props.onReplyMessage} avatar={this.getAvatarMember(message)} currentUserId={this.props.currentUserId} key={i} />
-          })}
+          return <Message onLikeMessage={this.props.onLikeMessage} message={message} avatarUserParentMessage={message.parentMessage ? this.getAvatarMember(message.parentMessage) : ''} onReplyMessage={this.props.onReplyMessage} avatar={this.getAvatarMember(message)} currentUserId={this.props.currentUserId} key={i} />;
+        })}
       </div>
     );
   }

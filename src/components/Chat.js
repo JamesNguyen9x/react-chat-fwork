@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import RoomList from './RoomList';
-import socketIOClient from "socket.io-client";
-import uuid from "uuid";
-import ChatWindow from "./ChatWindow";
+import socketIOClient from 'socket.io-client';
+import uuid from 'uuid';
+import ChatWindow from './ChatWindow';
 import update from 'react-addons-update';
 import {connect} from 'react-redux';
 import fetchAPI from '../fetchAPI';
@@ -18,13 +18,13 @@ class Chat extends Component {
     this.state = {
       number: 0,
       rooms: [],
-      currentUserId: "",
-      roomIdActive: "",
-      tokenJWT: "",
+      currentUserId: '',
+      roomIdActive: '',
+      tokenJWT: '',
       isLoading: false,
-      firstMessageAt: "",
-      typingMessage: "",
-      messageSuggest: "",
+      firstMessageAt: '',
+      typingMessage: '',
+      messageSuggest: '',
       isOpen: false
     };
     this.roomList = React.createRef();
@@ -41,20 +41,20 @@ class Chat extends Component {
     let tokenJWT = getToken();
     window.socket.on('connect', () => {
       window.socket.emit('authenticate', {token: tokenJWT});
-      window.socket.on("authenticated_success", () => {
+      window.socket.on('authenticated_success', () => {
         if (this.state.rooms.length > 0) {
           this.state.rooms.forEach(room => {
-            window.socket.emit('join_room', room._id)
-          })
+            window.socket.emit('join_room', room._id);
+          });
         }
-      })
+      });
     });
-    this.listenEvent()
+    this.listenEvent();
   };
 
   listenEvent = () => {
     window.socket.on('disconnect', () => {
-      console.log('disconnect')
+      console.error('disconnect');
     });
 
     window.socket.on('user_change_status', data => {
@@ -77,9 +77,9 @@ class Chat extends Component {
       });
       this.timeoutStopTyping = setTimeout(() => {
         this.setState({
-          messageSuggest: ""
+          messageSuggest: ''
         });
-      }, 3000)
+      }, 3000);
     });
 
     window.socket.on('new_message', data => {
@@ -92,7 +92,7 @@ class Chat extends Component {
         rooms: update(this.state.rooms, {
           [index]: {
             messageList: {$set: [...this.state.rooms[index].messageList, data]},
-            messageSuggest: {$set: ""}
+            messageSuggest: {$set: ''}
           },
         }),
       });
@@ -104,20 +104,20 @@ class Chat extends Component {
         return;
       }
       clearTimeout(this.timeoutStopTyping);
-      let newListMessage = this.state.rooms[index].messageList.filter(mess => mess._id !== data._id);
-      newListMessage.push(data);
+      const indexMessage = this.state.rooms[index].messageList.findIndex(mess => mess._id === data._id);
+      let newListMessage = this.state.rooms[index].messageList;
+      newListMessage.splice(indexMessage, 1, data);
       this.setState({
         rooms: update(this.state.rooms, {
           [index]: {
             messageList: {$set: newListMessage},
-            messageSuggest: {$set: ""}
+            messageSuggest: {$set: ''}
           },
         }),
       });
     });
 
     window.socket.on('new_message_room_off', data => {
-      console.log('data: ', data);
       this.roomList.current.updateLastMessage(data, true);
       const index = this.state.rooms.findIndex(room => room._id === data.roomId);
       if (index < 0) {
@@ -131,7 +131,7 @@ class Chat extends Component {
             {unreadMessage: {$set: unreadMessage}}
         })
       });
-    })
+    });
 
   };
   setRoomsActiveToSession = () => {
@@ -144,11 +144,11 @@ class Chat extends Component {
         return {
           roomId: room._id,
           isHideWindow: room.isHideWindow
-        }
+        };
       });
       sessionStorage.setItem('roomIdsActive', JSON.stringify(roomsInfo));
     } else {
-      console.log('This browser does not support session storage');
+      console.error('This browser does not support session storage');
     }
   };
 
@@ -177,12 +177,12 @@ class Chat extends Component {
       roomsSessionInfo.forEach(roomSession => {
         let roomInfo = response.data.roomsInfo.find(room => room._id === roomSession.roomId);
         if (!roomInfo) {
-          return
+          return;
         }
         roomInfo.isHideWindow = roomSession.isHideWindow;
-        roomInfo.firstMessageAt = "";
-        roomInfo.typingMessage = "";
-        roomInfo.messageSuggest = "";
+        roomInfo.firstMessageAt = '';
+        roomInfo.typingMessage = '';
+        roomInfo.messageSuggest = '';
         roomInfo.messageList = [];
         roomInfo.canLoadMore = true;
         roomInfo.isLoading = false;
@@ -192,10 +192,10 @@ class Chat extends Component {
       this.setState({
         rooms: newRooms
       }, () => {
-        this.reopenRoom()
-      })
+        this.reopenRoom();
+      });
     } else {
-      console.log('This browser does not support session storage');
+      console.error('This browser does not support session storage');
     }
   };
 
@@ -204,8 +204,8 @@ class Chat extends Component {
       if (room.isHideWindow) {
         return;
       }
-      this.rejoinRoom(room, index, false)
-    })
+      this.rejoinRoom(room, index, false);
+    });
   };
 
   _onMessageWasSent = async (roomId, message) => {
@@ -230,7 +230,6 @@ class Chat extends Component {
       })
     }, () => {
       window.socket.emit('send_message', data, result => {
-        console.log('result: ', result)
         if (!result.success) {
           return;
         }
@@ -276,11 +275,10 @@ class Chat extends Component {
         let room = response.data.room;
         this._openChatWindow(room);
       }
-    })
+    });
   };
 
   _openChatWindow = (room) => {
-    console.log('_openChatWindow');
     const roomExits = this.state.rooms.filter(roomActive => roomActive._id === room._id);
     if (roomExits.length) {
       return;
@@ -292,9 +290,9 @@ class Chat extends Component {
   addRoom = async (room) => {
     let newRoom = {
       ...room,
-      firstMessageAt: "",
-      typingMessage: "",
-      messageSuggest: "",
+      firstMessageAt: '',
+      typingMessage: '',
+      messageSuggest: '',
       messageList: [],
       canLoadMore: true,
       isHideWindow: false,
@@ -304,6 +302,7 @@ class Chat extends Component {
       const roomInfo = await this.getMemberList(room._id);
       newRoom.members = roomInfo.roomUsers;
     }
+
     this.setState({
       rooms: [
         ...this.state.rooms,
@@ -311,8 +310,8 @@ class Chat extends Component {
       ]
     }, () => {
       this.setRoomsActiveToSession();
-      this._getMessage(room._id)
-    })
+      this._getMessage(room._id);
+    });
   };
 
   _onUserTyping = () => {
@@ -328,7 +327,8 @@ class Chat extends Component {
     }
   };
 
-  _onLikeMessage = (message) => {
+  _onLikeMessage = (mess) => {
+    const message = {...mess};
     if (message) {
       const params = {
         _id: message._id,
@@ -339,20 +339,20 @@ class Chat extends Component {
       if (index < 0) {
         return;
       }
-      if (message.liked.includes(this.state.currentUserId)) {
+      if (message.liked.includes(this.props.users.currentUser._id)) {
         message.liked = message.liked.filter(mess => mess !== this.props.users.currentUser._id);
       } else {
         message.liked.push(this.props.users.currentUser._id);
       }
-
-      let newListMessage = this.state.rooms[index].messageList.filter(mess => mess._id !== message._id);
-      newListMessage.push(message);
+      const indexMessage = this.state.rooms[index].messageList.findIndex(mess => mess._id === message._id);
+      let newListMessage = this.state.rooms[index].messageList;
+      newListMessage.splice(indexMessage, 1, message);
 
       this.setState({
         rooms: update(this.state.rooms, {
           [index]: {
             messageList: {$set: newListMessage},
-            messageSuggest: {$set: ""}
+            messageSuggest: {$set: ''}
           },
         }),
       });
@@ -398,26 +398,41 @@ class Chat extends Component {
         });
       }
     }).catch(err => {
-      console.log('err _getMessage: ', err)
-    })
+      console.error('err _getMessage: ', err);
+    });
   };
 
   _createGroup = (data) => {
-    data = {...data, userId: this.state.currentUserId}
-
+    data = {...data, userId: this.props.users.currentUser._id};
     const baseURL = `${process.env.API_SERVER_SOCKET}/api/v1`;
-    const url = `${process.env.API_SERVER_SOCKET}/api/v1/groups`
+    const url = `${process.env.API_SERVER_SOCKET}/api/v1/groups`;
 
-    return fetchAPI(baseURL, url, 'POST', null, data)
+    return fetchAPI(baseURL, url, 'POST', null, data);
   };
 
   _editGroup = (data) => {
-    data = {...data, userId: this.state.currentUserId}
 
     const baseURL = `${process.env.API_SERVER_SOCKET}/api/v1`;
-    const url = `${process.env.API_SERVER_SOCKET}/api/v1/groups/${data.roomId}/edit`
+    const url = `${process.env.API_SERVER_SOCKET}/api/v1/groups/${data.roomId}/edit`;
 
-    return fetchAPI(baseURL, url, 'PUT', null, data)
+    return fetchAPI(baseURL, url, 'PUT', null, data).then((res) => {
+      if (res.status === 200) {
+
+        this.roomList.current.updateRoom(res.data.newRoom);
+        this.updateRoom(res.data.newRoom);
+      }
+    });
+  };
+
+  updateRoom = (newRoom) => {
+    let index = this.state.rooms.findIndex(room => room._id === newRoom._id);
+    this.setState({
+      rooms: update(this.state.rooms, {
+        [index]: {$set: {...this.state.rooms[index], ...newRoom}}
+      })
+    }, () => {
+      window.socket.emit('update_room', newRoom);
+    });
   };
 
   _onScroll = (scrollTop, roomId) => {
@@ -431,35 +446,15 @@ class Chat extends Component {
 
     for (let i = 0; i < filesList.length; i++) {
       const file = filesList[i];
-      data.append(`file${i}`, file)
+      data.append(`file${i}`, file);
     }
 
-    const baseURL = `${process.env.API_SERVER_SOCKET}/api/v1`
-    const url = `${process.env.API_SERVER_SOCKET}/api/v1/upload-file`
+    const baseURL = `${process.env.API_SERVER_SOCKET}/api/v1`;
+    const url = `${process.env.API_SERVER_SOCKET}/api/v1/upload-file`;
 
-    return fetchAPI(baseURL, url, 'POST', null, data)
+    return fetchAPI(baseURL, url, 'POST', null, data);
 
   };
-
-  // _onFilesSelected(filesList) {
-  //   let messages = [];
-  //   for (let i = 0; i < filesList.length; i++) {
-  //     let message = {
-  //       data: {
-  //         fileName: filesList[i].name,
-  //         url: ""
-  //       },
-  //       type: 3,
-  //       senderId: this.state.currentUserId,
-  //       createdDate: new Date(),
-  //       clientId: uuid()
-  //     };
-  //     messages.push(message)
-  //   }
-  //   this.setState({
-  //     messageList: [...this.state.messageList, ...messages]
-  //   })
-  // }
 
   _onClose(roomId) {
     let index = this.state.rooms.findIndex(room => room._id === roomId);
@@ -472,8 +467,8 @@ class Chat extends Component {
       rooms
     }, () => {
       this.setRoomsActiveToSession();
-    })
-  };
+    });
+  }
 
   _onHideWindow = room => {
     const index = this.state.rooms.findIndex(roomActive => roomActive._id === room._id);
@@ -485,12 +480,12 @@ class Chat extends Component {
     } else {
       this.setState({
         rooms: update(this.state.rooms, {
-            [index]: {
-              isHideWindow: {
-                $set: !this.state.rooms[index].isHideWindow
-              }
+          [index]: {
+            isHideWindow: {
+              $set: !this.state.rooms[index].isHideWindow
             }
           }
+        }
         )
       }, () => {
         this.setRoomsActiveToSession();
@@ -508,27 +503,27 @@ class Chat extends Component {
     if (isSetState) {
       this.setState({
         rooms: update(this.state.rooms, {
-            [index]: {
-              isHideWindow: {
-                $set: !this.state.rooms[index].isHideWindow,
-              },
-              messageList: {
-                $set: []
-              },
-              firstMessageAt: {
-                $set: null
-              },
-              canLoadMore: {
-                $set: true
-              },
-              members: {
-                $set: room.members
-              },
-              unreadMessage: {
-                $set: 0
-              }
+          [index]: {
+            isHideWindow: {
+              $set: !this.state.rooms[index].isHideWindow,
+            },
+            messageList: {
+              $set: []
+            },
+            firstMessageAt: {
+              $set: null
+            },
+            canLoadMore: {
+              $set: true
+            },
+            members: {
+              $set: room.members
+            },
+            unreadMessage: {
+              $set: 0
             }
           }
+        }
         )
       }, () => {
         this._getMessage(room._id);
@@ -572,6 +567,7 @@ class Chat extends Component {
                 onUserInputSubmit={this._onMessageWasSent}
                 onLikeMessage={this._onLikeMessage}
                 onFilesSelected={this._onFilesSelected}
+                _editGroup={this._editGroup}
                 isOpen={true}
                 onClose={this._onClose.bind(this)}
                 showEmoji={true}

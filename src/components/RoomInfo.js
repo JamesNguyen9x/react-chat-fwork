@@ -5,11 +5,11 @@ import momentjs from 'moment';
 
 class RoomInfo extends Component {
   _openChatWindow = () => {
-    this.props._openChatWindow(this.props.room)
+    this.props._openChatWindow(this.props.room);
   };
 
   renderLastTimeSendMessage = () => {
-    let format = "DD/MM/YY";
+    let format = 'DD/MM/YY';
     let lastTime = momentjs(this.props.room.lastTimeSendMessage);
     let startOfWeek = momentjs().startOf('week').add(1, 'day');
     if (!lastTime.isBefore(momentjs(), 'day')) {
@@ -19,7 +19,7 @@ class RoomInfo extends Component {
     }
     return (
       <Moment format={format}>{this.props.room.lastTimeSendMessage}</Moment>
-    )
+    );
   };
 
   render() {
@@ -28,8 +28,8 @@ class RoomInfo extends Component {
         <div className="room-info">
           <div className="img_cont cursor-pointer">
             <img src={this.props.room.avatarUrl} alt="status-icon" onClick={this._openChatWindow}
-                 className="rounded-circle user_img"/>
-            <span className={"online_icon" + (this.props.room.status === 1 ? " offline" : "")}></span>
+              className="rounded-circle user_img"/>
+            <span className={'online_icon' + (this.props.room.status === 1 ? ' offline' : '')}></span>
           </div>
           <div className="user_info cursor-pointer" onClick={this._openChatWindow}>
             <p className="room-name">{ this.props.room.name }</p>

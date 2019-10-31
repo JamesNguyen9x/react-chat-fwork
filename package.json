@@ -1,7 +1,7 @@
 {
-  "name": "react-chat-window",
-  "version": "1.2.0",
-  "description": "react-chat-window React component",
+  "name": "react-chat-fwork",
+  "version": "1.0.0",
+  "description": "React Chat Fwork",
   "main": "lib/index.js",
   "module": "es/index.js",
   "files": [
@@ -12,21 +12,24 @@
   ],
   "scripts": {
     "build": "nwb build-react-component --copy-files",
-    "clean": "nwb clean-module && nwb clean-demo",
-    "lint": "eslint src demo/src",
-    "start": "nwb serve-react-demo",
-    "gh:publish": "nwb build-demo && gh-pages -d demo/dist"
+    "clean": "nwb clean-module",
+    "lint": "eslint src"
   },
   "dependencies": {
     "emoji-js": "3.2.2",
     "gh-pages": "^1.2.0",
+    "moment": "^2.24.0",
     "prop-types": "15.5.10",
+    "react-addons-update": "^15.6.2",
+    "react-debounce-input": "^3.2.2",
     "react-highlight.js": "1.0.5",
     "react-linkify": "^0.2.1",
+    "react-moment": "^0.9.6",
+    "react-svg": "^10.0.23",
     "socket.io-client": "2.0.3"
   },
   "peerDependencies": {
-    "react": "15.x"
+    "react": "16.x"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",
@@ -36,7 +39,7 @@
     "react": "15.6.1",
     "react-dom": "15.6.1"
   },
-  "author": "kingofthestack",
+  "author": "damnn",
   "homepage": "https://kingofthestack.github.io/react-chat-window/",
   "license": "MIT",
   "repository": {
