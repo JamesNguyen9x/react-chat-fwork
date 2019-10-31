@@ -1,0 +1,167 @@
+.sc-message {
+  width: 235px;
+  margin: auto;
+  padding-bottom: 10px;
+  display: flex;
+}
+
+.sc-message--content {
+  position: relative;
+  width: 100%;
+  display: flex;
+}
+
+.sc-message--content.sent {
+  justify-content: flex-end;
+}
+
+.sc-message--content.sent .sc-message--avatar {
+  display: none;
+}
+
+.sc-message--avatar {
+  background-image: url(https://d13yacurqjgara.cloudfront.net/assets/avatar-default-aa2eab7684294781f93bc99ad394a0eb3249c5768c21390163c9f55ea8ef83a4.gif);
+  background-repeat: no-repeat;
+  background-size: 100%;
+  background-position: center;
+  min-width: 30px;
+  min-height: 30px;
+  border-radius: 50%;
+  align-self: center;
+  margin-right: 8px;
+}
+
+.sc-message--text {
+  min-width: 110px;
+  position: relative;
+  padding: 8px 12px 0px;
+  border-radius: 6px;
+  font-weight: 300;
+  font-size: 13px;
+  line-height: 1.3;
+  white-space: pre-wrap;
+  -webkit-font-smoothing: subpixel-antialiased;
+  word-wrap: break-word;
+  text-align: left;
+}
+
+.content-message-background-left {
+  background: #ccc !important;
+}
+
+.sc-message--time {
+  position: absolute;
+  right: 25px;
+  bottom: 2px;
+  font-size: 11px;
+  font-style: italic;
+}
+
+.sc-message--icon-status {
+  position: absolute;
+  right: 5px;
+  bottom: 0px;
+}
+
+.sc-message--content.sent .sc-message--text {
+  color: white;
+  background-color: #4e8cff;
+  max-width: calc(100% - 60px);
+  word-wrap: break-word;
+}
+
+.sc-message--content.received .sc-message--text {
+  color: #263238;
+  background-color: #f4f7f9;
+  margin-right: 40px;
+}
+
+.sc-message--emoji {
+  font-size: 40px;
+}
+
+.sc-message--file {
+  background: white;
+  border: solid 1px #CCCDD1;
+  padding: 15px 20px;
+  border-radius: 5px;
+  display: flex;
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 1.4;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.sc-message--file p {
+  margin: 0px 0px 0px 10px;
+  color: rgba(86, 88, 103, 0.6);
+}
+
+
+.message-icon-event {
+  position: absolute;
+  top: 5px;
+  right: -6px;
+}
+
+.message-icon-event .like-icon {
+  cursor: pointer;
+}
+
+.message-icon-event .reply-icon {
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+.sc-message--file .sc-user-input--file-icon:hover path {
+  fill: rgba(86, 88, 103, 0.3);
+}
+
+.avatar-user-parent-message {
+  float: left;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.container-count-like {
+  position: absolute;
+  bottom: -5px;
+  left: 0px;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  background: orange;
+}
+
+.container-count-like .count-like-img {
+  width: 12px;
+  height: 12px;
+}
+
+.container-count-like .count-like-number {
+  font-size: 11px;
+  margin-right: 2px;
+}
+
+.content-parent-message {
+  margin-left: 3px;
+  font-size: 13px;
+  color: black;
+  display: inline-block;
+  width: 120px;
+  white-space: nowrap;
+  overflow: hidden !important;
+  text-overflow: ellipsis;
+}
+
+.contain-reply-message {
+  background: #dee2e6;
+  border-radius: 5px;
+}
+
+@media (max-width: 450px) {
+  .sc-message {
+    width: 80%;
+  }
+}
