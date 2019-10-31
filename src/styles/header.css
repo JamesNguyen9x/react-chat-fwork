@@ -1,0 +1,77 @@
+.sc-header {
+  cursor: pointer;
+  background: #fff;
+  min-height: 55px;
+  border-top-left-radius: 9px;
+  border-top-right-radius: 9px;
+  padding: 10px;
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .3);
+  color: #000;
+}
+
+.sc-header--img {
+  width: 36px;
+  border-radius: 50%;
+  align-self: center;
+}
+
+.hide-window .sc-header--img {
+  width: 25px;
+}
+
+.hide-window .sc-header--team-name {
+  padding: 2px 8px;
+}
+
+.hide-window .sc-header {
+  padding: 2px 10px;
+  min-height: 45px;
+}
+
+.sc-header--team-name {
+  align-self: center;
+  padding: 10px;
+  flex: 1;
+  user-select: none;
+  border-radius: 5px;
+  text-align: left;
+  font-size: 14px;
+}
+
+.sc-header--close-button {
+  align-self: center;
+  margin-right: 5px;
+  box-sizing: border-box;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.sc-header--close-button:hover {
+
+}
+
+.sc-header--unread-message {
+  background-color: #fa3e3e;
+  border-radius: 2px;
+  color: #fff;
+  padding: 1px 4px;
+  position: absolute;
+  right: 40px;
+  font-size: 12px;
+  top: 20px;
+}
+
+.hide-window .sc-header--unread-message {
+  top: 12px;
+}
+
+@media (max-width: 450px) {
+  .sc-header {
+    border-radius: 0px;
+  }
+}
+
+
