@@ -7,6 +7,7 @@ import Group from './Group';
 import iconCreateGroup from '../assets/create-group-button.svg';
 import {DebounceInput} from 'react-debounce-input';
 import UserInfo from './UserInfo';
+import closeIcon from '../assets/close-black-icon.png';
 
 class RoomList extends Component {
   constructor() {
@@ -187,6 +188,16 @@ class RoomList extends Component {
     });
   };
 
+  resetSearch = async () => {
+    this.setState({
+      key: '',
+      searchResult: {
+        groups: [],
+        users: []
+      }
+    });
+  };
+
   render() {
     return (
       <div className="user-list chat">
@@ -202,10 +213,13 @@ class RoomList extends Component {
                 placeholder="Search..."
                 value={this.state.key}
               />
-              <div className="input-group-prepend">
-                <span className="search_btn"><i className="fas fa-search"></i></span>
+              <div className="input-icon-close">
+                <span className={`search_btn`}>
+                  {this.state.key.length ?
+                    <img onClick={this.resetSearch} width={12} src={closeIcon} alt="search"/>
+                   : <span>&nbsp;&nbsp;</span> }
+                </span> 
               </div>
-
             </div>
           </div>
           <div className="card-body contacts_body">

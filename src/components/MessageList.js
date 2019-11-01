@@ -40,26 +40,35 @@ class MessageList extends Component {
     return '';
   };
 
-  getUsersLiked = (listMember, listMemberLiked) => {
+  getUsersLiked = (message) => {
+    const listMemberLiked = message.liked;
     let data = [];
-    if (listMember) {
-      listMember.map(member => {
-        if (listMemberLiked.includes(member.userInfo._id)) {
-          data.push(member.userInfo);
+    if (this.props.room.type === 1) {
+      const currentUser = this.props.currentUser;
+      data.push({
+        profile: {
+          fullName: message.senderId === this.props.currentUserId ? this.props.teamName : currentUser.profile.fullName
         }
       });
     }
+    
+    if (listMemberLiked && listMemberLiked.length > 0) {
+      const { members } = this.props.room;
+      if (members) {
+        members.map(member => {
+          if (listMemberLiked.includes(member.userInfo._id)) {
+            data.push(member.userInfo);
+          }
+        });
+      }
+    }
+
     return data;
   };
 
   getUserName = (message) => {
     if (this.props.room.type === 1) {
-      const currentUser = this.props.currentUser;
-      if (currentUser && currentUser.profile) {
-        if (currentUser._id === message.senderId) {
-          return currentUser.profile.fullName;
-        }
-      }
+      return this.props.teamName;
     }
   
     const { members } = this.props.room;
@@ -78,7 +87,7 @@ class MessageList extends Component {
         {this.props.messages.map((message, i) => {
           return <Message
           members={this.props.members}
-          usersLiked={this.getUsersLiked(this.props.members, message.liked)}
+          usersLiked={this.getUsersLiked(message)}
           onLikeMessage={this.props.onLikeMessage}
           message={message}
           getUserName={this.getUserName(message)}

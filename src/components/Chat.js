@@ -84,11 +84,20 @@ class Chat extends Component {
     });
 
     window.socket.on('new_message', data => {
-      this.roomList.current.updateLastMessage(data);
-      const index = this.state.rooms.findIndex(roomActive => roomActive._id === data.roomId);
+      
+      const index = this.state.rooms.findIndex(userActive => userActive._id === data.roomId);
+
+      let isMyMessage = this.state.rooms[index].messageList.filter(message => message.clientId === data.clientId).length > 0;
+
+      if (isMyMessage && (data.type === 4 || data.type === 3)) {
+        return
+      }
+      
       if (index < 0) {
         return;
       }
+
+      this.roomList.current.updateLastMessage(data);
       
       clearTimeout(this.timeoutStopTyping);
       this.setState({
@@ -477,9 +486,9 @@ class Chat extends Component {
       }),
       messageSuggest: ""
     });
-
     this._uploadFiles(files, roomId).then(res => {
       let listFileMess = res.data.result
+
       if (res.status === 200) {
         this.setState({
           rooms: update(this.state.rooms, {

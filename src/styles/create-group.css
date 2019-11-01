@@ -1,6 +1,7 @@
-body {
+body *{
   font-family: 'Roboto', sans-serif;
 }
+
 .create-group-box {
   position: fixed;
   background-color: rgba(255, 255, 255, 0.25);
@@ -43,7 +44,8 @@ body {
 }
 
 .create-group-box .content .header h5{
-  padding: 20px;
+  padding: 0 20px;
+  font-size: 20px;
 }
 
 .create-group-box .content .footer{
@@ -60,6 +62,8 @@ body {
 .create-group-box .content .footer button{
   border: 1px solid #999999;
   cursor: pointer;
+  font-size: 16px;
+  padding: 4px 8px;
   box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.15);
   border-radius: 7%;
   margin-right: 20px;
@@ -129,11 +133,11 @@ body {
 
 .search_user input {
   border: .5px solid rgba(0, 0, 0, 0.2);
-  border-radius: 3px;
+  border-radius: .3rem;
   outline: none;
   padding: 10px;
   height: 10%;
-  width: 100%;
+  width: -webkit-fill-available;
 }
 
 .user-items {
@@ -166,7 +170,7 @@ body {
 .user-items p {
   padding-left: 10px;
   margin: 0;
-  font-size: 13px;
+  font-size: 12px;
   line-height: 35px;
 }
 

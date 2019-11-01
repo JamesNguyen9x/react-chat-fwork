@@ -29,7 +29,11 @@ class RoomInfo extends Component {
           <div className="img_cont cursor-pointer">
             <img src={this.props.room.avatarUrl} alt="status-icon" onClick={this._openChatWindow}
               className="rounded-circle user_img"/>
-            <span className={'online_icon' + (this.props.room.status === 1 ? ' offline' : '')}></span>
+            {
+              this.props.room.type === 1 ?
+                <span className={'online_icon' + (this.props.room.status === 1 ? ' offline' : '')}></span>
+                : null
+            }
           </div>
           <div className="user_info cursor-pointer" onClick={this._openChatWindow}>
             <p className="room-name">{ this.props.room.name }</p>

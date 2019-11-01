@@ -16,12 +16,12 @@ class Header extends Component {
           <span className="sc-header--unread-message">{ this.props.unreadMessage }</span>
           : '' }
         <div style={{display: 'flex', alignItems: 'center'}}>
-          <img 
+          {this.props.typeRoom === 2 && <img 
             className="icon-edit-gr"
             src={editIcon} 
             onClick={this.props.openEditGroup} 
             alt="edit group" 
-          />
+          />}
           <div className="sc-header--close-button" onClick={(e) => {
             e.stopPropagation();
             this.props.onClose();

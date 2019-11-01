@@ -91,6 +91,7 @@ class ChatWindow extends Component {
           unreadMessage={this.props.room.unreadMessage}
           teamName={this.props.room.name}
           avatar={this.props.room.avatarUrl}
+          typeRoom={this.props.room.type}
           onClose={this.onClose.bind(this)}
         />
         <MessageList
@@ -98,6 +99,7 @@ class ChatWindow extends Component {
           onScroll={this.onScroll.bind(this)}
           messages={this.props.room.messageList}
           room={this.props.room}
+          teamName={this.props.room.name}
           avatar={this.props.room.avatarUrl}
           currentUserId={this.props.currentUserId}
           onReplyMessage={this.props.onReplyMessage}

@@ -1,6 +1,6 @@
 {
   "name": "react-chat-fwork",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "React Chat Fwork",
   "main": "lib/index.js",
   "module": "es/index.js",

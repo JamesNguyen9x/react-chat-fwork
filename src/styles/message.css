@@ -167,6 +167,7 @@
   border-left: 3px solid green;
   background: white; 
   border-radius: 6px;
+  margin-bottom: 2px;
 }
 
 .message-text-user-name {

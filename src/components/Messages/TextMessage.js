@@ -27,16 +27,19 @@ const TextMessage = (props) => {
         {props.content}
       </div>
       {props.liked && props.liked.length > 0 ?
-        <span data-tip data-for={"showUsersLiked_" + props._id} className="container-count-like">
-          <span className="count-like-number">{props.liked.length}</span>
-          <img className="count-like-img" src={thumbsUpHandSymbolIcon} />
-        </span>
+        <div>
+          <span data-tip data-for={"showUsersLiked_" + props._id} className="container-count-like">
+            <span className="count-like-number">{props.liked.length}</span>
+            <img className="count-like-img" src={thumbsUpHandSymbolIcon} />
+          </span>
+          <ReactTooltip id={"showUsersLiked_" + props._id} type='error'>
+            <ul className="container-users-liked">
+              {renderUserLiked(props.usersLiked)}
+            </ul>
+          </ReactTooltip>
+        </div>
         : '' }
-        <ReactTooltip id={"showUsersLiked_" + props._id} type='error'>
-          <ul className="container-users-liked">
-            {renderUserLiked(props.usersLiked)}
-          </ul>
-        </ReactTooltip>
+        
     </Linkify>
   }
   <Moment className="sc-message--time" format="hh:mm A">{props.createdDate}</Moment>
