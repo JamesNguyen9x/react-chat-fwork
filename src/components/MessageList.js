@@ -40,11 +40,53 @@ class MessageList extends Component {
     return '';
   };
 
+  getUsersLiked = (listMember, listMemberLiked) => {
+    let data = [];
+    if (listMember) {
+      listMember.map(member => {
+        if (listMemberLiked.includes(member.userInfo._id)) {
+          data.push(member.userInfo);
+        }
+      });
+    }
+    return data;
+  };
+
+  getUserName = (message) => {
+    if (this.props.room.type === 1) {
+      const currentUser = this.props.currentUser;
+      if (currentUser && currentUser.profile) {
+        if (currentUser._id === message.senderId) {
+          return currentUser.profile.fullName;
+        }
+      }
+    }
+  
+    const { members } = this.props.room;
+    if (members && members.length > 0 ) {
+      return members.map(member => {
+        if (member.userInfo._id === message.senderId) {
+          return member.userInfo.profile.fullName;
+        }
+      });
+    }
+  }
+
   render() {
     return (
       <div style={ this.props.isHideWindow ? {display: 'none'} : {} } className="sc-message-list" ref={el => this.scrollList = el} onScroll={this.handleScroll}>
         {this.props.messages.map((message, i) => {
-          return <Message onLikeMessage={this.props.onLikeMessage} message={message} avatarUserParentMessage={message.parentMessage ? this.getAvatarMember(message.parentMessage) : ''} onReplyMessage={this.props.onReplyMessage} avatar={this.getAvatarMember(message)} currentUserId={this.props.currentUserId} key={i} />;
+          return <Message
+          members={this.props.members}
+          usersLiked={this.getUsersLiked(this.props.members, message.liked)}
+          onLikeMessage={this.props.onLikeMessage}
+          message={message}
+          getUserName={this.getUserName(message)}
+          avatarUserParentMessage={message.parentMessage ? this.getAvatarMember(message.parentMessage) : ''}
+          onReplyMessage={this.props.onReplyMessage}
+          avatar={this.getAvatarMember(message)}
+          currentUserId={this.props.currentUserId}
+          key={i} />;
         })}
       </div>
     );

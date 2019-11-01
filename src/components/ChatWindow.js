@@ -103,6 +103,7 @@ class ChatWindow extends Component {
           onReplyMessage={this.props.onReplyMessage}
           currentUser={this.props.currentUser}
           onLikeMessage={this.props.onLikeMessage}
+          members={this.props.room.members}
         />
         <div className="message-suggest"><i>{this.props.room.messageSuggest}</i></div>
         {this.props.room.messageReply ?

@@ -68,7 +68,7 @@ class Chat extends Component {
 
     window.socket.on('typing_message', data => {
       clearTimeout(this.timeoutStopTyping);
-      if (data.roomId !== this.state.roomIdActive || data.userId === this.props.users.currentUser._id) {
+      if (data.roomId !== this.state.roomIdActive || data.userId === this.props.user._id) {
         return;
       }
       const message = this.state.userActive.username + data.message;
@@ -83,6 +83,7 @@ class Chat extends Component {
     });
 
     window.socket.on('new_message', data => {
+      this.roomList.current.updateLastMessage(data);
       const index = this.state.rooms.findIndex(roomActive => roomActive._id === data.roomId);
       if (index < 0) {
         return;
@@ -118,6 +119,7 @@ class Chat extends Component {
     });
 
     window.socket.on('new_message_room_off', data => {
+      console.log('new_message_room_off')
       this.roomList.current.updateLastMessage(data, true);
       const index = this.state.rooms.findIndex(room => room._id === data.roomId);
       if (index < 0) {
@@ -219,10 +221,11 @@ class Chat extends Component {
       parentMessage: message.parentMessage ? message.parentMessage._id : ''
     };
     message.status = 0;
-    message.senderId = this.props.users.currentUser._id;
+    message.senderId = this.props.user._id;
     message.createdDate = new Date();
     message.clientId = uuid();
     const newMessageList = [...this.state.rooms[index].messageList, message];
+    console.log('newMessageList')
     this.setState({
       rooms: update(this.state.rooms, {
         [index]:
@@ -334,15 +337,16 @@ class Chat extends Component {
         _id: message._id,
         roomId: message.roomId
       };
-      window.socket.emit('like_message', params, result => {});
+      window.socket.emit('like_message', params, () => {
+      });
       const index = this.state.rooms.findIndex(roomActive => roomActive._id === message.roomId);
       if (index < 0) {
         return;
       }
-      if (message.liked.includes(this.props.users.currentUser._id)) {
-        message.liked = message.liked.filter(mess => mess !== this.props.users.currentUser._id);
+      if (message.liked.includes(this.props.user._id)) {
+        message.liked = message.liked.filter(mess => mess !== this.props.user._id);
       } else {
-        message.liked.push(this.props.users.currentUser._id);
+        message.liked.push(this.props.user._id);
       }
       const indexMessage = this.state.rooms[index].messageList.findIndex(mess => mess._id === message._id);
       let newListMessage = this.state.rooms[index].messageList;
@@ -374,7 +378,7 @@ class Chat extends Component {
       firstMessageAt: room.firstMessageAt
     };
     const baseURL = `${process.env.CHAT_BACKEND_URL}/api/v1/chat`;
-    const url = `${process.env.CHAT_BACKEND_URL}/api/v1/messages`;
+    const url = `/messages`;
     fetchAPI(baseURL, url, 'GET', params).then(response => {
       this.isLoadingMessage = false;
       let messages = response.data.messages;
@@ -403,7 +407,7 @@ class Chat extends Component {
   };
 
   _createGroup = (data) => {
-    data = {...data, userId: this.props.users.currentUser._id};
+    data = {...data, userId: this.props.user._id};
     const baseURL = `${process.env.CHAT_BACKEND_URL}/api/v1/chat`;
     const url = `/groups`;
 
@@ -574,10 +578,10 @@ class Chat extends Component {
                 onUserTyping={this._onUserTyping}
                 onScroll={this._onScroll}
                 room={room}
-                currentUserId={this.props.users.currentUser._id}
+                currentUserId={this.props.user._id}
                 onReplyMessage={this._onReplyMessage}
                 onCloseReplyMessage={this._onCloseReplyMessage}
-                currentUser={this.props.users.currentUser}
+                currentUser={this.props.user}
               />
             </div>;
           })}
@@ -596,7 +600,7 @@ class Chat extends Component {
 }
 
 Chat.propTypes = {
-  user: PropTypes.object,
+  user: PropTypes.object.isRequired,
 };
 
 export default Chat;

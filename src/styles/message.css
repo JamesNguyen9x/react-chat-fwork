@@ -149,15 +149,31 @@
   font-size: 13px;
   color: black;
   display: inline-block;
-  width: 120px;
+  width: 105px;
   white-space: nowrap;
   overflow: hidden !important;
   text-overflow: ellipsis;
 }
 
+.container-users-liked {
+  padding-left: 0px;
+}
+
+.container-users-liked li {
+  list-style: none;
+}
+
 .contain-reply-message {
-  background: #dee2e6;
-  border-radius: 5px;
+  border-left: 3px solid green;
+  background: white; 
+  border-radius: 6px;
+}
+
+.message-text-user-name {
+  margin-bottom: 0px;
+  margin-left: 60px;
+  font-size: 10px;
+  text-align: left;
 }
 
 @media (max-width: 450px) {

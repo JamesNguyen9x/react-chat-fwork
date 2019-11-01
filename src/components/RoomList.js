@@ -223,7 +223,6 @@ class RoomList extends Component {
               )
             }
           </div>
-          );
 
           {this.state.openCreateGroupWindow &&
             <Group

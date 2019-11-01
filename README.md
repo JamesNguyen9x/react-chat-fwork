@@ -1,4 +1,4 @@
-# chat-fwork
+# React Chat Fwork
 
 ## Installation
 
@@ -12,7 +12,7 @@ $ npm install react-chat-fwork
 import React, {Component} from 'react'
 import {Chat} from 'chat-fwork'
 
-class Demo extends Component {
+class Fwork extends Component {
 
   constructor() {
     super();
