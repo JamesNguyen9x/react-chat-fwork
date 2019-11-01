@@ -7,6 +7,7 @@ import ChatWindow from './ChatWindow';
 import update from 'react-addons-update';
 import fetchAPI from '../fetchAPI';
 import {getToken} from '../fetchAPI/cookie';
+import axios from 'axios'
 
 class Chat extends Component {
   typing = false;
@@ -77,9 +78,9 @@ class Chat extends Component {
       });
       this.timeoutStopTyping = setTimeout(() => {
         this.setState({
-          messageSuggest: ''
+          messageSuggest: ""
         });
-      }, 3000);
+      }, 3000)
     });
 
     window.socket.on('new_message', data => {
@@ -88,6 +89,7 @@ class Chat extends Component {
       if (index < 0) {
         return;
       }
+      
       clearTimeout(this.timeoutStopTyping);
       this.setState({
         rooms: update(this.state.rooms, {
@@ -305,7 +307,6 @@ class Chat extends Component {
       const roomInfo = await this.getMemberList(room._id);
       newRoom.members = roomInfo.roomUsers;
     }
-
     this.setState({
       rooms: [
         ...this.state.rooms,
@@ -445,20 +446,86 @@ class Chat extends Component {
     }
   };
 
-  _onFilesSelected = (filesList) => {
-    let data = new FormData();
-
-    for (let i = 0; i < filesList.length; i++) {
-      const file = filesList[i];
-      data.append(`file${i}`, file);
+  _onFilesSelected = (index, roomId, files, callback) => {
+    let messages = [];
+    let uuids = []
+    for (let i = 0; i < files.length; i++) {
+      const myUuid = uuid()
+      // console.log('myUuid', myUuid)
+      files[i].clientId = myUuid
+      uuids.push(myUuid)
+      let message = {
+        file: {
+          name: files[i].name,
+          url: ""
+        },
+        type: 4,
+        senderId: this.props.user._id,
+        createdDate: new Date(),
+        clientId: myUuid,
+        uploading: true
+      };
+      messages.push(message)
     }
 
-    const baseURL = `${process.env.CHAT_BACKEND_URL}/api/v1/chat`;
-    const url = `${process.env.CHAT_BACKEND_URL}/api/v1/upload-file`;
+    this.setState({
+      rooms: update(this.state.rooms, {
+        [index]: {
+          messageList: {$set: [...this.state.rooms[index].messageList, ...messages]}
+        },
+        countUnReadMessage: {$set: this.state.rooms[index].countUnReadMessage++}
+      }),
+      messageSuggest: ""
+    });
 
-    return fetchAPI(baseURL, url, 'POST', null, data);
+    this._uploadFiles(files, roomId).then(res => {
+      let listFileMess = res.data.result
+      if (res.status === 200) {
+        this.setState({
+          rooms: update(this.state.rooms, {
+            [index]: {
+              messageList: {$set: this.state.rooms[index].messageList.map(message => {
+                let indexMess = listFileMess.findIndex(mess => mess.clientId === message.clientId)
+                if (indexMess !== -1 ) {
+                  return listFileMess[indexMess]
+                }
+                return message
+              })}
+            }
+          })
+        }, () => callback());
+      }
+    })
+  }
 
-  };
+  _uploadFiles = (files, roomId) => {
+    let data = new FormData();
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      data.append(`${file.clientId}`, file)
+    }
+    data.append('roomId', roomId)
+
+    const baseURL = `${process.env.CHAT_BACKEND_URL}/api/v1/chat`
+    const url = `/upload-file`
+
+    let token = getToken()
+
+    const headers = {
+      'content-type': 'multipart/form-data',
+      'Authorization': `Bearer ${token}`
+    }
+  
+    let options = {
+      url,
+      method: 'POST',
+      baseURL,
+      headers,
+      data
+    };
+    return axios(options)
+  }
 
   _onClose(roomId) {
     let index = this.state.rooms.findIndex(room => room._id === roomId);

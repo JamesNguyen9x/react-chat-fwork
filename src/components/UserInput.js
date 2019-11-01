@@ -6,6 +6,8 @@ import EmojiIcon from './icons/EmojiIcon';
 import PopupWindow from './popups/PopupWindow';
 import EmojiPicker from './emoji-picker/EmojiPicker';
 
+import fileIcon from '../assets/file.png';
+
 class UserInput extends Component {
   constructor() {
     super();
@@ -13,7 +15,8 @@ class UserInput extends Component {
       inputActive: false,
       inputHasText: false,
       emojiPickerIsOpen: false,
-      emojiFilter: ''
+      emojiFilter: '',
+      files: [] 
     };
   }
 
@@ -31,7 +34,8 @@ class UserInput extends Component {
 
   handleKeyUp(event) {
     const inputHasText = event.target.innerHTML.length !== 0 &&
-      event.target.innerText !== '\n';
+      event.target.innerText !== '\n'
+      console.log('inputHasText', event.target.innerHTML)
     this.setState({ inputHasText });
   }
 
@@ -58,6 +62,25 @@ class UserInput extends Component {
     const { messageReply } = this.props;
     event.preventDefault();
     const text = this.userInput.textContent;
+
+    if (this.state.files.length > 0) {
+      this.props.onFilesSelected(this.state.files, () => {
+        if (text && text.length > 0) {
+          console.log('hastext')
+          this.props.onSubmit({
+            type: 1,
+            content: text
+          });
+        }
+      })
+    this.setState({
+      files: []
+    })
+    this.userInput.innerHTML = '';
+    this._fileUploadButton.value = ''
+    return
+    }
+
     if (text && text.length > 0) {
       let data = {
         type: 1,
@@ -72,10 +95,33 @@ class UserInput extends Component {
     }
   }
 
-  _onFilesSelected(event) {
-    if (event.target.files && event.target.files.length > 0) {
-      this.props.onFilesSelected(event.target.files);
+  _onFilesSelected({target: {files}}) {
+    let listFileName = this.state.files.map(file => file.name)
+    let fileList = Array.from(files).filter(file => !listFileName.includes(file.name))
+    if (files && files.length > 0) {
+      this.userInput.focus()
+
+      let listFileImage = fileList.filter(file => this._isImage(file.type))
+      let listFile = fileList.filter(file => !this._isImage(file.type))
+
+      Promise.all(listFileImage.map(file => {
+        return this._getBase64(file)
+      })).then(data => {
+        let newFiles = this.state.files.concat([...data, ...listFile])
+        this.setState({
+          files: newFiles
+        })
+      })
     }
+    this._fileUploadButton.value = ''
+  }
+
+  _onDeleteFileChecked = (index) => {
+    let newFiles = this.state.files
+    newFiles.splice(index,1)
+    this.setState({
+      files: newFiles
+    })
   }
 
   _handleEmojiPicked = (emoji) => {
@@ -108,24 +154,38 @@ class UserInput extends Component {
     </PopupWindow>
   );
 
+  _isImage = (type) => {
+    return (/^image\/(gif|jpg|jpeg|tiff|png)$/g).test(type)
+  }
+
+  _getBase64 = (img) => {
+    const reader = new FileReader();
+    return new Promise(function(resolve, reject) { 
+      reader.addEventListener('load', () => {
+        img.url = reader.result
+        resolve(img)
+      });
+      reader.readAsDataURL(img);
+    } );
+  }
+
   _renderSendOrFileIcon() {
-    if (this.state.inputHasText) {
-      return (
-        <div className="sc-user-input--button">
-          <SendIcon onClick={this._submitText.bind(this)} />
-        </div>
-      );
-    }
     return (
-      <div className="sc-user-input--button">
-        <FileIcon onClick={this._showFilePicker.bind(this)} />
-        <input
-          type="file"
-          name="files[]"
-          multiple
-          ref={(e) => { this._fileUploadButton = e; }}
-          onChange={this._onFilesSelected.bind(this)}
-        />
+      <div>
+        <div className={`sc-user-input--button ${!this.state.inputHasText && 'd-none'}`}>
+        <SendIcon onClick={this._submitText.bind(this)} />
+        </div>
+        <div className={`sc-user-input--button ${this.state.inputHasText && 'd-none'}`}>
+          <FileIcon onClick={this._showFilePicker.bind(this)} />
+          <input
+            id="fileUpload"
+            type="file"
+            name="files[]"
+            multiple
+            ref={(e) => { this._fileUploadButton = e; }}
+            onChange={this._onFilesSelected.bind(this)}
+          />
+        </div>
       </div>
     );
   }
@@ -133,31 +193,56 @@ class UserInput extends Component {
   render() {
     const { emojiPickerIsOpen, inputActive } = this.state;
     return (
-      <form style={ this.props.isHideWindow ? {display: 'none'} : {} } className={`sc-user-input ${(inputActive ? 'active' : '')}`}>
-        <div
-          role="button"
-          tabIndex="0"
-          onFocus={() => { this.setState({ inputActive: true }); }}
-          onBlur={() => { this.setState({ inputActive: false }); }}
-          ref={(e) => { this.userInput = e; }}
-          onKeyDown={this.handleKeyDown.bind(this)}
-          onKeyUp={this.handleKeyUp.bind(this)}
-          contentEditable="true"
-          placeholder="Write a reply..."
-          className="sc-user-input--text"
-        >
-        </div>
-        <div className="sc-user-input--buttons">
-          <div className="sc-user-input--button">
-            {this.props.showEmoji && <EmojiIcon
-              onClick={this.toggleEmojiPicker}
-              isActive={emojiPickerIsOpen}
-              tooltip={this._renderEmojiPopup()}
-            />}
+      <div className={`sc-user-input ${(inputActive ? 'active' : '')}`}>
+         <div className="list-file-selectd">
+           {this.state.files.map((file, index) => this._isImage(file.type) ?
+              (<div className="file-img" key={index}>
+                <img src={file.url} alt={file.name}/>
+                <p 
+                onClick={this._onDeleteFileChecked.bind(null, index)} 
+                className="delete-file"
+              >x</p>
+              </div>) :
+              (<div key={index} className="file-item">
+              <img src={fileIcon} alt="file icon"/>
+              <div className="file-infor">
+                <p className="file-name">{file.name.length > 12 ? ('...' + file.name.slice(file.name.length - 12)) : file.name}</p>
+              </div>
+              <p 
+                onClick={this._onDeleteFileChecked.bind(null, index)} 
+                className="delete-file"
+              >x</p>
+            </div>)
+              )}
           </div>
-          {this._renderSendOrFileIcon()}
-        </div>
-      </form>
+        <form 
+          style={ this.props.isHideWindow ? {display: 'none'} : {} } 
+        >
+          <div
+            role="button"
+            tabIndex="0"
+            onFocus={() => { this.setState({ inputActive: true }); }}
+            onBlur={() => { this.setState({ inputActive: false }); }}
+            ref={(e) => { this.userInput = e; }}
+            onKeyDown={this.handleKeyDown.bind(this)}
+            onKeyUp={this.handleKeyUp.bind(this)}
+            contentEditable="true"
+            placeholder="Write a reply..."
+            className="sc-user-input--text"
+          >
+          </div>
+          <div className="sc-user-input--buttons">
+            <div className="sc-user-input--button">
+              {this.props.showEmoji && <EmojiIcon
+                onClick={this.toggleEmojiPicker}
+                isActive={emojiPickerIsOpen}
+                tooltip={this._renderEmojiPopup()}
+              />}
+            </div>
+            {this._renderSendOrFileIcon()}
+          </div>
+        </form>
+      </div>
     );
   }
 }

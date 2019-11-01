@@ -1,16 +1,18 @@
 .sc-user-input {
-  min-height: 55px;
+  /* min-height: 55px; */
   border-top: 1px solid #c9d0da;
   margin: 0;
   position: relative;
   bottom: 0;
-  display: flex;
   background-color: #f4f7f9;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
   transition: background-color .2s ease,box-shadow .2s ease;
 }
 
+.sc-user-input form {
+  display: flex;
+}
 
 .sc-user-input--text {
   width: 300px;
@@ -46,7 +48,6 @@
   width: 100px;
   position: absolute;
   right: 10px;
-  height: 100%;
   display: flex;
   justify-content: flex-end;
 }
@@ -139,4 +140,85 @@
 .sc-user-input--emoji-icon:hover path,
 .sc-user-input--emoji-icon:hover circle {
   fill: rgba(86, 88, 103, 1);
+}
+
+.list-file-selectd {
+  display: flex;
+  overflow-x: auto;
+  border-bottom: .2px solid #e6e6e6;
+  width: 100%;
+  overflow-y: auto;
+}
+
+.list-file-selectd .file-img{
+  margin: 10px;
+  min-width: 50px;
+  min-height: 50px;
+  border-radius: 3%;
+  position: relative;
+  overflow: hidden;
+  /* box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.15); 
+  border: 10%;  */
+}
+
+.list-file-selectd .file-img img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 50px; 
+  max-height: 50px; 
+}
+
+.file-item {
+  margin: 10px;
+  display: flex;
+  max-height: 50px;
+  align-items: center;
+  position: relative;
+  border-radius: 10px;
+  padding: 5px;
+  box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.15);
+}
+
+.delete-file {
+  color: #626471;
+  position: absolute;
+  padding: 0 6px;
+  display: block;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  background: white;
+  top: -3px;
+  border-radius: 50%;
+  right: -3px;
+  font-weight: 600;
+  box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.15);
+}
+
+.file-item img {
+  width: 24px;
+  padding-right: 4px;
+}
+
+.file-item .file-infor {
+  border-left: 1px solid #e6e6e6;
+}
+
+.file-item p {
+   margin: 0;
+   font-size: 12px;
+   padding: 0 8px;
+   color: #777676;
+}
+
+.d-none {
+  display: none;
+}
+
+.create-gr-btn {
+  width: 30px;
+  cursor: pointer;
+  margin-right: 10px;
 }

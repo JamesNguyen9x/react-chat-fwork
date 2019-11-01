@@ -4,7 +4,7 @@ import RoomInfo from './RoomInfo';
 import fetchAPI from '../fetchAPI';
 import update from 'react-addons-update';
 import Group from './Group';
-import iconCreateGroup from '../assets/create-group-icon.png';
+import iconCreateGroup from '../assets/create-group-button.svg';
 import {DebounceInput} from 'react-debounce-input';
 import UserInfo from './UserInfo';
 
@@ -151,7 +151,7 @@ class RoomList extends Component {
     });
   };
 
-  handelCancerCreateGroup = () => {
+  handelCancelCreateGroup = () => {
     this.setState({
       openCreateGroupWindow: false,
     });
@@ -169,7 +169,7 @@ class RoomList extends Component {
       });
       return;
     }
-    const baseURL = `${process.env.CHAT_BACKEND_URL}/api/v1`;
+    const baseURL = `${process.env.CHAT_BACKEND_URL}/api/v1/chat`;
     const url = `/rooms/search`;
     const params = {
       key
@@ -190,17 +190,22 @@ class RoomList extends Component {
   render() {
     return (
       <div className="user-list chat">
-        <div className="card mb-sm-3 mb-md-0 contacts_card">
+        <div className="contacts_card">
           <div className="card-header">
             <div className="input-group">
-              <img onClick={this._openCreateGroupWindow} src={iconCreateGroup} alt="Create group!"/>
+              <img className="create-gr-btn" onClick={this._openCreateGroupWindow} src={iconCreateGroup} alt="Create group!"/>
               <DebounceInput
+                className="form-control search"
                 onChange={this.handleSearch}
                 minLength={2}
                 debounceTimeout={300}
                 placeholder="Search..."
                 value={this.state.key}
               />
+              <div className="input-group-prepend">
+                <span className="search_btn"><i className="fas fa-search"></i></span>
+              </div>
+
             </div>
           </div>
           <div className="card-body contacts_body">
@@ -223,13 +228,12 @@ class RoomList extends Component {
               )
             }
           </div>
-
           {this.state.openCreateGroupWindow &&
             <Group
               groupInfo={this.state.groupEdit}
               _editGroup={this.props._editGroup}
               _createGroup={this.props._createGroup}
-              handleCancel={this.handelCancerCreateGroup}
+              handleCancel={this.handelCancelCreateGroup}
               handleUpdateRoom={this.addRoom}
             />
           }

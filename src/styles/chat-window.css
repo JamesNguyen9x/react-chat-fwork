@@ -1,7 +1,7 @@
 .users-chat {
   position: absolute;
-  right: 330px;
-  bottom: 30px;
+  right: 345px;
+  bottom: 15px;
   display: flex;
   justify-content: space-between;
   flex-direction: row-reverse;

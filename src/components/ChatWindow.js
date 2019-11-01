@@ -30,8 +30,8 @@ class ChatWindow extends Component {
     this.props.onScroll(scrollTop, this.props.room._id);
   }
 
-  onFilesSelected(filesList) {
-    this.props.onFilesSelected(filesList);
+  onFilesSelected(filesList, callback) {
+    this.props.onFilesSelected(this.props.index, this.props.room._id, filesList, callback);
   }
 
   onClose() {

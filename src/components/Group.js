@@ -87,7 +87,6 @@ export default class Group extends Component {
     }).catch(err => {
       console.error('err fetchUser: ', err);
     });
-
   }
 
   handleSearch = (e) => {
